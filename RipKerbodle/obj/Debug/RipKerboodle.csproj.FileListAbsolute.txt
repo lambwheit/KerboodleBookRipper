@@ -1,0 +1,10 @@
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\bin\Debug\RipKerboodle.exe.config
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\bin\Debug\RipKerboodle.exe
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\bin\Debug\RipKerboodle.pdb
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\obj\Debug\RipKerboodle.csprojAssemblyReference.cache
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\obj\Debug\RipKerboodle.csproj.CoreCompileInputs.cache
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\obj\Debug\RipKerboodle.exe
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\obj\Debug\RipKerboodle.pdb
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\bin\Debug\itextsharp.dll
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\bin\Debug\itextsharp.xml
+D:\Visual Studio Repos\RipKerboodle\RipKerboodle\obj\Debug\RipKerboodle.csproj.CopyComplete
