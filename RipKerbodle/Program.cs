@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Text;  
 using System.IO;
-using System.Security.Policy;
 using iTextSharp.text;
 using iTextSharp.text.pdf; 
 
@@ -35,7 +28,7 @@ namespace RipKerboodle
             string pdfname = Console.ReadLine();
             System.IO.Directory.CreateDirectory(foldername);
             Console.Clear();
-	        Console.Title = "Downloading pages into: "+foldername ;
+	        /*Console.Title = "Downloading pages into: "+foldername ;
             while (true)
             {
                 try
@@ -56,18 +49,17 @@ namespace RipKerboodle
                 }
                 init++;
             }
-	        Console.Clear();
+	        Console.Clear();*/
 	        Console.Title = "Adding pages into:" + pdfname+".pdf";
             Document document = new Document();
             using (var stream = new FileStream(pdfname + ".pdf", FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 PdfWriter.GetInstance(document, stream);
                 document.Open();
-                DirectoryInfo d = new DirectoryInfo(foldername);
-                foreach (var file in d.GetFiles("*.jpg"))
+                for (int i = 1;i< init; i++)
                 {
-                    Console.WriteLine("Adding" + file+" into pdf");
-                    using (var imageStream = new FileStream(foldername+"\\"+file.ToString(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    Console.WriteLine("Adding page "+i+" into pdf");
+                    using (var imageStream = new FileStream(foldername+"\\"+i+".jpg", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         var image = Image.GetInstance(imageStream);
                         float maxWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
