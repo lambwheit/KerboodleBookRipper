@@ -28,7 +28,7 @@ namespace RipKerboodle
             string pdfname = Console.ReadLine();
             System.IO.Directory.CreateDirectory(foldername);
             Console.Clear();
-	        /*Console.Title = "Downloading pages into: "+foldername ;
+	    Console.Title = "Downloading pages into: "+foldername ;
             while (true)
             {
                 try
@@ -49,7 +49,7 @@ namespace RipKerboodle
                 }
                 init++;
             }
-	        Console.Clear();*/
+	        Console.Clear();
 	        Console.Title = "Adding pages into:" + pdfname+".pdf";
             Document document = new Document();
             using (var stream = new FileStream(pdfname + ".pdf", FileMode.Create, FileAccess.Write, FileShare.None))
