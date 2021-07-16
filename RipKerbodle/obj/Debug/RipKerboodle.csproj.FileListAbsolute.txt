@@ -8,3 +8,11 @@ D:\Visual Studio Repos\RipKerboodle\RipKerboodle\obj\Debug\RipKerboodle.pdb
 D:\Visual Studio Repos\RipKerboodle\RipKerboodle\bin\Debug\itextsharp.dll
 D:\Visual Studio Repos\RipKerboodle\RipKerboodle\bin\Debug\itextsharp.xml
 D:\Visual Studio Repos\RipKerboodle\RipKerboodle\obj\Debug\RipKerboodle.csproj.CopyComplete
+F:\Users\alfred\Documents\git\KerboodleBookRipper\RipKerbodle\bin\Debug\RipKerboodle.exe.config
+F:\Users\alfred\Documents\git\KerboodleBookRipper\RipKerbodle\obj\Debug\RipKerboodle.exe
+F:\Users\alfred\Documents\git\KerboodleBookRipper\RipKerbodle\obj\Debug\RipKerboodle.pdb
+F:\Users\alfred\Documents\git\KerboodleBookRipper\RipKerbodle\bin\Debug\RipKerboodle.exe
+F:\Users\alfred\Documents\git\KerboodleBookRipper\RipKerbodle\bin\Debug\RipKerboodle.pdb
+F:\Users\alfred\Documents\git\KerboodleBookRipper\RipKerbodle\bin\Debug\itextsharp.dll
+F:\Users\alfred\Documents\git\KerboodleBookRipper\RipKerbodle\bin\Debug\itextsharp.xml
+F:\Users\alfred\Documents\git\KerboodleBookRipper\RipKerbodle\obj\Debug\RipKerboodle.csprojResolveAssemblyReference.cache

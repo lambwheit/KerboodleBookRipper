@@ -1,79 +1,110 @@
 using System;
 using System.IO;
-using System.Net;
-using iTextSharp.text;
-using iTextSharp.text.pdf; 
 
 namespace RipKerboodle
 {
     class Program
     {
+        static KerboodleDownloader kdown = new KerboodleDownloader();
+        static PDFProcessor pdfman = new PDFProcessor();
+        static string fld = null;
+        static string ext = null;
+
         static void Main(string[] args)
         {
-            int init = 1;
-            Console.WriteLine("Example of image link: https://assets-runtime-production-oxed-oup.avallain.net/ebooks/33fc849f13124f366e9f1e2a/images/");
-            Console.Write("Enter in image link: ");
-            string link = Console.ReadLine();
-            Console.WriteLine("Instructions for page name: ");
-            Console.WriteLine("Get the file name");
-            Console.WriteLine("https://assets-runtime-production-oxed-oup.avallain.net/ebooks/dd094244a18d3730296d98c0/images/page-5.jpg");
-            Console.WriteLine("In the above it's page-5.jpg");
-            Console.WriteLine("Once u have the page name relace the page number with the word number");
-            Console.WriteLine("page-number.jpg");
-            Console.WriteLine("That will be your page name");
-            Console.Write("Enter in page name: ");
-            string pagename = Console.ReadLine();
-            Console.Write("Folder name: ");
-            string foldername = Console.ReadLine();
-            Console.Write("Pdf Name: ");
-            string pdfname = Console.ReadLine();
-            System.IO.Directory.CreateDirectory(foldername);
-            Console.Clear();
-	    Console.Title = "Downloading pages into: "+foldername ;
-            while (true)
+            Console.WriteLine("RIP Kerboodle!");
+            var mis = getMenuItem();
+            if (mis == 0) Environment.Exit(0);
+            if (mis == 1 || (mis - 2) == 1)
+            {
+                getKerboodleLink();
+                ext = kdown.extension;
+                kdown.percentageUpdate += percentager;
+                fld = getKerboodleDownloadPath();
+                if (!Directory.Exists(fld)) Directory.CreateDirectory(fld);
+                kdown.downloadTo(fld);
+                kdown.percentageUpdate -= percentager;
+            }
+            if (mis == 2 || (mis - 1) == 2)
+            {
+                if (object.ReferenceEquals(fld, null)) fld = getKerboodleDownloadPath(true);
+                if (object.ReferenceEquals(ext, null)) ext = getImageExtension();
+                pdfman.percentageUpdate += percentager;
+                var pth = getPDFSavePath();
+                insertPDFImages();
+                pdfman.save(pth, 0.0F);
+                pdfman.percentageUpdate -= percentager;
+            }
+            Console.WriteLine("Press Any Key To Continue...");
+            Console.ReadKey(true);
+            Environment.Exit(0);
+        }
+
+        public static int getMenuItem()
+        {
+            Console.WriteLine("MENU:");
+            Console.WriteLine("Add the numbers to to both tasks.");
+            Console.WriteLine("1: Download from Kerboodle.");
+            Console.WriteLine("2: Create PDF From download.");
+            Console.WriteLine("INVALID: Exit.");
+            Console.Write("Option: ");
+            var ck = Console.ReadKey(true);
+            Console.WriteLine(ck.KeyChar);
+            if (ck.Key == ConsoleKey.D1 || ck.Key == ConsoleKey.NumPad1) return 1;
+            if (ck.Key == ConsoleKey.D2 || ck.Key == ConsoleKey.NumPad2) return 2;
+            if (ck.Key == ConsoleKey.D3 || ck.Key == ConsoleKey.NumPad3) return 3;
+            return 0;
+        }
+
+        public static void getKerboodleLink()
+        {
+            Console.WriteLine("Example of image link: " + kdown.kerboodleLink);
+            Console.WriteLine("Where '#NUMBER#' will be replaced by the page number.");
+            Console.WriteLine("Enter the image link:");
+            kdown.kerboodleLink = Console.ReadLine();
+            Console.WriteLine("Image Link Set To: " + kdown.kerboodleLink);
+        }
+
+        public static string getKerboodleDownloadPath(bool shouldExist = false)
+        {
+            Console.WriteLine("Enter the download folder path of the kerboodle images:");
+            var toret = Console.ReadLine();
+            return (shouldExist && (!Directory.Exists(toret))) ? "" : toret;
+        }
+
+        public static string getPDFSavePath()
+        {
+            Console.WriteLine("Enter the save path of the PDF:");
+            return Console.ReadLine();
+        }
+
+        public static string getImageExtension()
+        {
+            Console.WriteLine("Enter the file extension of the saved images (Including the leading .):");
+            return Console.ReadLine();
+        }
+
+        public static void insertPDFImages(int startPage = 1, int endPage = int.MaxValue)
+        {
+            if (startPage > endPage) return;
+            Console.WriteLine("Inserting PDF Images...");
+            for (int i = startPage; i <= endPage; i++)
             {
                 try
                 {
-                    string pagename2 = pagename.Replace("number", init.ToString());
-                    string url = link + pagename2;
-                    var request = (HttpWebRequest)WebRequest.Create(url);
-                    using (WebClient webClient = new WebClient())
+                    using (var imageStream = new FileStream(fld + "\\" + i.ToString() + ext, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        webClient.DownloadFile(url, foldername+"\\"+ init + ".jpg");
+                        pdfman.add(iTextSharp.text.Image.GetInstance(imageStream));
                     }
-                    Console.WriteLine("Ripped Page Number: "+init);
+                    Console.WriteLine("Inserting Image: " + i.ToString() + "/" + (endPage - startPage + 1).ToString());
                 }
-                catch 
-                {
-                    Console.WriteLine("Rip Finished, "+(init-1).ToString()+" Pages Ripped");
-                    break;
-                }
-                init++;
+                catch { break; }
             }
-	        Console.Clear();
-	        Console.Title = "Adding pages into:" + pdfname+".pdf";
-            Document document = new Document();
-            using (var stream = new FileStream(pdfname + ".pdf", FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                PdfWriter.GetInstance(document, stream);
-                document.Open();
-                for (int i = 1;i< init; i++)
-                {
-                    Console.WriteLine("Adding page "+i+" into pdf");
-                    using (var imageStream = new FileStream(foldername+"\\"+i+".jpg", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    {
-                        var image = Image.GetInstance(imageStream);
-                        float maxWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
-                        float maxHeight = document.PageSize.Height - document.TopMargin - document.BottomMargin;
-                        if (image.Height > maxHeight || image.Width > maxWidth) image.ScaleToFit(maxWidth, maxHeight);
-                        document.Add(image);
-                    }
-                }
-                document.Close();
-            }
-            Console.Clear();
-            Console.WriteLine("Done");
-            Console.ReadLine();
+        }
+
+        static void percentager(object sender, int per)
+        {
+            Console.WriteLine(((object.ReferenceEquals(sender, null)) ? "%UNKNOWN%" : sender.GetType().Name) + " : " + per.ToString() + "%");
         }
     }
 }
