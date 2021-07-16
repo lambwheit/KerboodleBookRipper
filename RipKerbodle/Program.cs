@@ -54,7 +54,7 @@ namespace RipKerboodle
         public static int getMenuItem()
         {
             Console.WriteLine("MENU:");
-            Console.WriteLine("Add the numbers to to both tasks.");
+            Console.WriteLine("Add the numbers of tasks to do those tasks.");
             Console.WriteLine("1: Download from Kerboodle.");
             Console.WriteLine("2: Create PDF From download.");
             Console.WriteLine("4: Download from URL Store.");
