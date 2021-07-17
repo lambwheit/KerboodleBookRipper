@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30413.136
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RipKerboodle", "RipKerboodle\RipKerboodle.csproj", "{EE98B304-3164-426B-B7B3-A6CDBD1CAAF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RipKerboodle", "RipKerbodle\RipKerboodle.csproj", "{EE98B304-3164-426B-B7B3-A6CDBD1CAAF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RipKerboodleXML", "RipKerboodleXML\RipKerboodleXML.csproj", "{FBDC4891-2EE7-4170-B589-8D87F900CB15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EE98B304-3164-426B-B7B3-A6CDBD1CAAF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE98B304-3164-426B-B7B3-A6CDBD1CAAF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE98B304-3164-426B-B7B3-A6CDBD1CAAF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBDC4891-2EE7-4170-B589-8D87F900CB15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBDC4891-2EE7-4170-B589-8D87F900CB15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBDC4891-2EE7-4170-B589-8D87F900CB15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBDC4891-2EE7-4170-B589-8D87F900CB15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
