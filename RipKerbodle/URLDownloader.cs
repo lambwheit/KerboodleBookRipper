@@ -41,6 +41,7 @@ namespace RipKerboodle
                     {
                         try
                         {
+                            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                             var request = (HttpWebRequest)WebRequest.Create(urls[i - 1]);
                             webClient.DownloadFile(urls[i - 1], folderPath + "\\" + i.ToString() + _ext);
                             per = per + peradd;

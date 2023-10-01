@@ -57,6 +57,7 @@ namespace RipKerboodle
                     {
                         try
                         {
+                            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                             var lurl = _klnk.Replace("#NUMBER#", i.ToString());
                             var request = (HttpWebRequest)WebRequest.Create(lurl);
                             webClient.DownloadFile(lurl, folderPath + "\\" + i.ToString() + _ext);
