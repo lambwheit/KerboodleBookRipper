@@ -7,44 +7,70 @@ namespace RipKerboodle
     {
         static KerboodleDownloader kdown = new KerboodleDownloader();
         static PDFProcessor pdfman = new PDFProcessor();
+        static PDFMerger pdfmerge = new PDFMerger();
         static URLDownloader udown = new URLDownloader();
-        static string fld = null;
+        static string kerboodleTempPagePath = null;
         static string ext = null;
 
         static void Main(string[] args)
         {
             Console.WriteLine("RIP Kerboodle!");
-            var mis = getMenuItem();
-            if (mis == 0) Environment.Exit(0);
-            if (mis == 1 || (mis - 2) == 1 || (mis - 4) == 1 || (mis - 6) == 1)
+
+            // Command line mode: args = [option, folder_path, output_name]
+            if (args.Length >= 3)
+            {
+                int mis = int.Parse(args[0]);
+                if (mis == 8)
+                {
+                    kerboodleTempPagePath = args[1];
+                    pdfmerge.percentageUpdate += percentager;
+                    var pth = args[2];
+                    pdfmerge.mergePDFs(kerboodleTempPagePath, pth + ".pdf", ".pdf");
+                    pdfmerge.percentageUpdate -= percentager;
+                    Console.WriteLine("Merge completed. Output: " + pth + ".pdf");
+                    Environment.Exit(0);
+                }
+            }
+
+            var mis2 = getMenuItem();
+            if (mis2 == 0) Environment.Exit(0);
+            if (mis2 == 1)
             {
                 getKerboodleLink();
                 ext = kdown.extension;
                 kdown.percentageUpdate += percentager;
-                fld = getKerboodleDownloadPath();
-                if (!Directory.Exists(fld)) Directory.CreateDirectory(fld);
-                kdown.downloadTo(fld);
+                kerboodleTempPagePath = getKerboodleDownloadPath();
+                if (!Directory.Exists(kerboodleTempPagePath)) Directory.CreateDirectory(kerboodleTempPagePath);
+                kdown.downloadTo(kerboodleTempPagePath);
                 kdown.percentageUpdate -= percentager;
             }
-            if (mis == 4 || (mis - 1) == 4 || (mis - 2) == 4 || (mis - 3) == 4)
+            if (mis2 == 2)
             {
-                udown.load(getURLStorePath());
-                ext = udown.extension;
-                udown.percentageUpdate += percentager;
-                fld = getKerboodleDownloadPath();
-                if (!Directory.Exists(fld)) Directory.CreateDirectory(fld);
-                udown.downloadTo(fld);
-                udown.percentageUpdate -= percentager;
-            }
-            if (mis == 2 || (mis - 1) == 2 || (mis - 4) == 2 || (mis - 5) == 2)
-            {
-                if (object.ReferenceEquals(fld, null)) fld = getKerboodleDownloadPath(true);
+                if (object.ReferenceEquals(kerboodleTempPagePath, null)) kerboodleTempPagePath = getKerboodleDownloadPath(true);
                 if (object.ReferenceEquals(ext, null)) ext = getImageExtension();
                 pdfman.percentageUpdate += percentager;
                 var pth = getPDFSavePath();
                 insertPDFImages();
-                pdfman.save(pth, 0.0F);
+                pdfman.save(pth + ".pdf", 0.0F);
                 pdfman.percentageUpdate -= percentager;
+            }
+            if (mis2 == 4)
+            {
+                udown.load(getURLStorePath());
+                ext = udown.extension;
+                udown.percentageUpdate += percentager;
+                kerboodleTempPagePath = getKerboodleDownloadPath();
+                if (!Directory.Exists(kerboodleTempPagePath)) Directory.CreateDirectory(kerboodleTempPagePath);
+                udown.downloadTo(kerboodleTempPagePath);
+                udown.percentageUpdate -= percentager;
+            }
+            if (mis2 == 8)
+            {
+                if (object.ReferenceEquals(kerboodleTempPagePath, null)) kerboodleTempPagePath = getKerboodleDownloadPath(true);
+                pdfmerge.percentageUpdate += percentager;
+                var pth = getPDFSavePath();
+                pdfmerge.mergePDFs(kerboodleTempPagePath, pth + ".pdf", ".pdf");
+                pdfmerge.percentageUpdate -= percentager;
             }
             Console.WriteLine("Press Any Key To Continue...");
             Console.ReadKey(true);
@@ -54,21 +80,18 @@ namespace RipKerboodle
         public static int getMenuItem()
         {
             Console.WriteLine("MENU:");
-            Console.WriteLine("Add the numbers of tasks to do those tasks.");
             Console.WriteLine("1: Download from Kerboodle.");
-            Console.WriteLine("2: Create PDF From download.");
+            Console.WriteLine("2: Create PDF From Downloaded Images.");
             Console.WriteLine("4: Download from URL Store.");
+            Console.WriteLine("8: Create PDF From Downloaded PDFs.");
             Console.WriteLine("INVALID: Exit.");
             Console.Write("Option: ");
             var ck = Console.ReadKey(true);
             Console.WriteLine(ck.KeyChar);
             if (ck.Key == ConsoleKey.D1 || ck.Key == ConsoleKey.NumPad1) return 1;
             if (ck.Key == ConsoleKey.D2 || ck.Key == ConsoleKey.NumPad2) return 2;
-            if (ck.Key == ConsoleKey.D3 || ck.Key == ConsoleKey.NumPad3) return 3;
             if (ck.Key == ConsoleKey.D4 || ck.Key == ConsoleKey.NumPad4) return 4;
-            if (ck.Key == ConsoleKey.D5 || ck.Key == ConsoleKey.NumPad5) return 5;
-            if (ck.Key == ConsoleKey.D6 || ck.Key == ConsoleKey.NumPad6) return 6;
-            if (ck.Key == ConsoleKey.D7 || ck.Key == ConsoleKey.NumPad7) return 7;
+            if (ck.Key == ConsoleKey.D8 || ck.Key == ConsoleKey.NumPad8) return 8;
             return 0;
         }
 
@@ -90,7 +113,7 @@ namespace RipKerboodle
 
         public static string getPDFSavePath()
         {
-            Console.WriteLine("Enter the save path of the PDF:");
+            Console.WriteLine("Enter the name for the pdf to be saved as:");
             return Console.ReadLine();
         }
 
@@ -114,7 +137,7 @@ namespace RipKerboodle
             {
                 try
                 {
-                    using (var imageStream = new FileStream(fld + "\\" + i.ToString() + ext, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (var imageStream = new FileStream(kerboodleTempPagePath + "\\" + i.ToString() + ext, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         pdfman.add(iTextSharp.text.Image.GetInstance(imageStream));
                     }
